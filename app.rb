@@ -23,6 +23,10 @@ post("/register") do
     
     
     result = db.execute("SELECT id FROM users WHERE username=?", username)
+    p result
+
+    p password
+    p password_confirmation
     
     if result.empty?
         if password == password_confirmation
@@ -32,12 +36,22 @@ post("/register") do
             id = db.execute("SELECT id FROM users WHERE username=?", username).first["id"]
             p id
             session[:id] = id
-            
+            redirect('/register_confirmation')
+        else
+            session[:error] = "Lösenordet är nog fel"
+            redirect('/error')
         end
+    # else
+    #     set_error("Användarnamnet finns redan :(")
+    #     redirect('/error')
     end
+            
     
-    
-    redirect('/register_confirmation')
+end
+
+get("/error") do
+    slim(:error)
+
 end
 
 
@@ -49,6 +63,31 @@ get("/register_confirmation") do
     p "note är #{note}"
     slim(:register_confirmation, locals:{list: note})
 end
+
+post('/loggin') do
+    username = params["username"]
+    password = params["password"]
+
+    result = db.execute("SELECT id, password_digest FROM users WHERE username=?", username)
+
+    if result.empty?
+    
+    end
+
+
+    id = db.execute("SELECT id FROM users WHERE username=?", username).first["id"]
+    p id
+    session[:id] = id
+
+end 
+
+get('artister') do
+    db = SQLite3::Database.new("db/mello.db")
+    db.results_as_hash = true
+    result = db.execute("SELECT * FROM artister")
+    slim(:artister, locals:{users: result})
+end
+
 
 # post("/skapa_ny") do
 #     text = params["item"]
