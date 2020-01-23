@@ -13,8 +13,8 @@ db = SQLite3::Database.new("db/mello.db")
 db.results_as_hash = true
 
 post("/register") do
-    username = params["username"]
-    password = params["password"]
+    username = params["usernames"]
+    password = params["passwords"]
     password_confirmation = params["confirm_password"]
 
     # username = session[:id]
@@ -23,10 +23,14 @@ post("/register") do
     
     
     result = db.execute("SELECT id FROM users WHERE username=?", username)
-    p result
+    
+    p "result är #{result}"
 
-    p password
-    p password_confirmation
+    p "password är #{password}"
+    p "password_confirmation är #{password_confirmation}"
+
+    # p password
+    # p password_confirmation
     
     if result.empty?
         if password == password_confirmation
@@ -36,16 +40,16 @@ post("/register") do
             id = db.execute("SELECT id FROM users WHERE username=?", username).first["id"]
             p id
             session[:id] = id
-            redirect('/register_confirmation')
-        else
-            session[:error] = "Lösenordet är nog fel"
-            redirect('/error')
+        # else
+        #     session[:error] = "Lösenordet är nog fel"
+        #     redirect('/error')
         end
-    # else
-    #     set_error("Användarnamnet finns redan :(")
-    #     redirect('/error')
+        # else
+        #     set_error("Användarnamnet finns redan :(")
+        #     redirect('/error')
     end
-            
+    
+    redirect('/register_confirmation')
     
 end
 
@@ -75,13 +79,12 @@ post('/loggin') do
     end
 
 
-    id = db.execute("SELECT id FROM users WHERE username=?", username).first["id"]
+    session[:id] = db.execute("SELECT id FROM users WHERE username=?", username).first["id"]
     p id
-    session[:id] = id
 
 end 
 
-get('artister') do
+get('/artister') do
     db = SQLite3::Database.new("db/mello.db")
     db.results_as_hash = true
     result = db.execute("SELECT * FROM artister")
