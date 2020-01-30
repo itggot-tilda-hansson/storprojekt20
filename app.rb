@@ -13,18 +13,19 @@ db = SQLite3::Database.new("db/mello.db")
 db.results_as_hash = true
 
 post("/register") do
-    username = params["usernames"]
-    password = params["passwords"]
+    username = params["username"]
+    password = params["password"]
     password_confirmation = params["confirm_password"]
 
     # username = session[:id]
 
-   
+   p "här är params: #{params[0]}"
     
     
     result = db.execute("SELECT id FROM users WHERE username=?", username)
     
     p "result är #{result}"
+    p "username är #{username}"
 
     p "password är #{password}"
     p "password_confirmation är #{password_confirmation}"
@@ -40,16 +41,17 @@ post("/register") do
             id = db.execute("SELECT id FROM users WHERE username=?", username).first["id"]
             p id
             session[:id] = id
-        # else
-        #     session[:error] = "Lösenordet är nog fel"
-        #     redirect('/error')
+            session[:username] = username
+            redirect('/register_confirmation')
+        else
+            session[:error] = "Lösenordet är nog fel"
+            redirect('/error')
         end
-        # else
-        #     set_error("Användarnamnet finns redan :(")
-        #     redirect('/error')
+    else
+        set_error("Användarnamnet finns redan :(")
+        redirect('/error')
     end
     
-    redirect('/register_confirmation')
     
 end
 
@@ -60,8 +62,6 @@ end
 
 
 get("/register_confirmation") do
-    db = SQLite3::Database.new("db/mello.db")
-    db.results_as_hash = true
     current_user = session[:id]
     note = db.execute("SELECT text FROM note WHERE user_id=?", current_user.to_i)
     p "note är #{note}"
@@ -85,11 +85,25 @@ post('/loggin') do
 end 
 
 get('/artister') do
-    db = SQLite3::Database.new("db/mello.db")
-    db.results_as_hash = true
-    result = db.execute("SELECT * FROM artister")
-    slim(:artister, locals:{users: result})
+    slim(:artister)
+
 end
+
+get('/all') do
+    result = db.execute("SELECT name FROM artists")
+    slim(:all, locals:{users: result})
+end
+
+get('/artists/:id') do 
+    result = db.execute("SELECT * FROM artists WHERE artistid = ?", params[:id].to_i)
+    slim(:album, locals:{result:result.first})
+end
+
+# post('/artists') do
+#     id = params[:number]
+#     redirect("/artists/#{id}")
+# end
+
 
 
 # post("/skapa_ny") do
