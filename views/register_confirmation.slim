@@ -1,3 +1,6 @@
+form action="/logout" method="post"
+    button type="submit" Logout
+
 h1 Du är nu inloggad som #{session[:username]}
 
 p = session[:id]
@@ -5,4 +8,4 @@ p = session[:username]
 
 - if session[:id]
 
-a href="" Skapa din top 5 lista  
+a href="/topfem" Skapa din top 5 lista  

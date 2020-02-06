@@ -1,3 +1,10 @@
+form action="/all" method="GET"
+    input type="submit" value="Alla artister"
+
+form action="/artists" method="post"
+    input type="integer" name="number" placeholder="Sök på artist Id"
+    input type="submit" value="Visa artist"
+
 ul
     - users.each do |user|
         li = user["name"]

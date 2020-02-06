@@ -1,0 +1,6 @@
+h2 Välj dina top fem av årets artister 
+
+form action="" method="post"
+    - users.each do |user|
+        input type="checkbox" name="#{user['artistid']}" = user["name"]
+    button type="submit" Skicka

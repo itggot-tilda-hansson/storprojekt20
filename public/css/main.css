@@ -4,3 +4,7 @@ body{
     height: 100vh;
     background-image: linear-gradient( rgb(9,170,224), rgb(131,80,159), rgb(235,55,146), rgb(250,90,40), rgb(255,159,0))
 }
+
+a{
+    margin: 20px;
+}

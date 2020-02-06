@@ -61,11 +61,17 @@ get("/error") do
 end
 
 
-get("/register_confirmation") do
-    current_user = session[:id]
-    note = db.execute("SELECT text FROM note WHERE user_id=?", current_user.to_i)
-    p "note är #{note}"
-    slim(:register_confirmation, locals:{list: note})
+get("/register_confirmation") do    
+    p session[:id]
+    if session[:id] == nil
+        p "hej"
+        redirect('/error')
+    else
+        current_user = session[:id]
+        note = db.execute("SELECT text FROM note WHERE user_id=?", current_user)
+        p "note är #{note}"
+        slim(:register_confirmation, locals:{list: note})
+    end
 end
 
 post('/loggin') do
@@ -73,21 +79,56 @@ post('/loggin') do
     password = params["password"]
 
     result = db.execute("SELECT id, password_digest FROM users WHERE username=?", username)
+    p result
 
-    if result.empty?
-    
+    if result.empty? #ser om användaren finns
+        # "användaren finns inte"
+        p "användare"
+        redirect('/error')
+    else
+        password_digest = result.first['password_digest']
+        if BCrypt::Password.new(password_digest) == password #jämför med lösenordet i databasen
+            #här loggar du faktiskt in
+            session[:id] = result.first['id']
+            p session[:id]
+            session[:username] = username
+            
+            # session[:user_credentials] = {
+                #     username: username
+                #     id: id
+                # }
+                
+            redirect('/register_confirmation')    
+        else
+            # om lösenorden inte stämmer
+            p "lösenord"
+            redirect('/error')
+                
+        end
     end
 
+    # redirect('/register_confirmation')
 
-    session[:id] = db.execute("SELECT id FROM users WHERE username=?", username).first["id"]
-    p id
 
 end 
+
+post('/logout') do
+    p "logout"
+    session[:id] = nil
+    session[:username] = nil
+
+    redirect('/')
+end
 
 get('/artister') do
     slim(:artister)
 
 end
+
+get('/topfem') do
+    result = db.execute("SELECT name, artistid FROM artists")
+    slim(:topfem, locals:{users: result})
+end 
 
 get('/all') do
     result = db.execute("SELECT name FROM artists")
@@ -97,6 +138,17 @@ end
 get('/artists/:id') do 
     result = db.execute("SELECT * FROM artists WHERE artistid = ?", params[:id].to_i)
     slim(:album, locals:{result:result.first})
+end
+
+get('/artists/:id') do 
+    result = db.execute("SELECT * FROM artists WHERE ArtistId = ?", params[:id].to_i)
+    
+    slim(:artists, locals:{result:result.first})
+end
+
+post('/artists') do
+    id = params[:number]
+    redirect("/artists/#{id}")
 end
 
 # post('/artists') do
