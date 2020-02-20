@@ -135,6 +135,11 @@ get('/all') do
     slim(:all, locals:{users: result})
 end
 
+get('/all_win') do 
+    result = db.execute("SELECT artist FROM winners")
+    slim(:vinnare, locals:{users: result})
+end
+
 get('/artists/:id') do 
     result = db.execute("SELECT * FROM artists WHERE artistid = ?", params[:id].to_i)
     slim(:album, locals:{result:result.first})
@@ -142,7 +147,6 @@ end
 
 get('/artists/:id') do 
     result = db.execute("SELECT * FROM artists WHERE ArtistId = ?", params[:id].to_i)
-    
     slim(:artists, locals:{result:result.first})
 end
 

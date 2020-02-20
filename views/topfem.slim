@@ -1,6 +1,8 @@
-h2 Välj dina top fem av årets artister 
+h2 Välj dina favorit av årets artister 
 
-form action="" method="post"
+form action="/dintopfem" method="post"
     - users.each do |user|
         input type="checkbox" name="#{user['artistid']}" = user["name"]
+        / if (isset($_POST['#{user['artistid']}']))
+
     button type="submit" Skicka
