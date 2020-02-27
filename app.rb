@@ -2,6 +2,7 @@ require 'slim'
 require 'sinatra'
 require 'sqlite3'
 require 'bcrypt'
+require 'byebug'
 
 enable :sessions
 
@@ -132,12 +133,14 @@ end
 
 get('/all') do
     result = db.execute("SELECT name FROM artists")
+    p result
     slim(:all, locals:{users: result})
 end
 
 get('/all_win') do 
     result = db.execute("SELECT artist FROM winners")
-    slim(:vinnare, locals:{users: result})
+    p result
+    slim(:all_win, locals:{users: result})
 end
 
 get('/artists/:id') do 
@@ -154,6 +157,20 @@ post('/artists') do
     id = params[:number]
     redirect("/artists/#{id}")
 end
+
+get('/dintopfem') do 
+    result = params.keys
+    artistnamn = []
+
+    result.each do |e|
+        namn = db.execute("SELECT name FROM artists WHERE artistid = (?)", e.to_i)
+        artistnamn << namn
+    end
+    p params
+    p artistnamn
+    slim(:dintopfem, locals:{result: artistnamn})
+
+end 
 
 # post('/artists') do
 #     id = params[:number]
