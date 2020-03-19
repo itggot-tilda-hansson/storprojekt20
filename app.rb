@@ -132,13 +132,14 @@ get('/topfem') do
 end 
 
 get('/all') do
-    result = db.execute("SELECT name FROM artists")
+    result = db.execute("SELECT * FROM artists WHERE winner IS NULL")
     p result
     slim(:all, locals:{users: result})
 end
 
 get('/all_win') do 
-    result = db.execute("SELECT artist FROM winners")
+    result = db.execute("SELECT * FROM artists WHERE winner IS NOT NULL")
+    # result = db.execute("SELECT artist FROM artists WHERE winner='true'")
     p result
     slim(:all_win, locals:{users: result})
 end
@@ -158,9 +159,10 @@ post('/artists') do
     redirect("/artists/#{id}")
 end
 
-get('/dintopfem') do 
+get('/dintopfem') do
     result = params.keys
     artistnamn = []
+    # p result 
 
     result.each do |e|
         namn = db.execute("SELECT name FROM artists WHERE artistid = (?)", e.to_i)
@@ -169,8 +171,24 @@ get('/dintopfem') do
     p params
     p artistnamn
     slim(:dintopfem, locals:{result: artistnamn})
+    # artistnamn = params[:artistnamn]
+    # redirect("/dintopfem")
 
 end 
+
+get('/delete') do
+    result = params.keys
+    artistnamn = []
+
+    result.each do |e|
+        namn = db.execute("DELETE name FROM artists WHERE artistid = (?)", e.to_i)
+        artistnamn << namn
+    end
+    p params
+    p artistnamn
+    slim(:dintopfem, locals:{result: artistnamn})
+
+end
 
 # post('/artists') do
 #     id = params[:number]

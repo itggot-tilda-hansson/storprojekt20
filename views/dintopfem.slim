@@ -3,7 +3,11 @@ h1 Här är dina favorit artister
 
 ul
     - result.each do |e|
-        li = e.first['name']
+        li = e.first['name'] 
+        form action="/delete" method="get"
+	        input type="submit" value="Ta bort" 
+
+            
 
 
 a href="/topfem" Ändra dina favorit artister här
