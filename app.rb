@@ -4,6 +4,8 @@ require 'sqlite3'
 require 'bcrypt'
 require 'byebug'
 
+require_relative './model.rb'
+
 enable :sessions
 
 get("/") do 
@@ -126,9 +128,9 @@ get('/artister') do
 
 end
 
-get('/topfem') do
+get('/favorite_artist') do
     result = db.execute("SELECT name, artistid FROM artists")
-    slim(:topfem, locals:{users: result})
+    slim(:favorite_artist, locals:{users: result})
 end 
 
 get('/all') do
@@ -149,17 +151,17 @@ get('/artists/:id') do
     slim(:album, locals:{result:result.first})
 end
 
-get('/artists/:id') do 
-    result = db.execute("SELECT * FROM artists WHERE ArtistId = ?", params[:id].to_i)
-    slim(:artists, locals:{result:result.first})
-end
+# get('/artists/:id') do 
+#     result = db.execute("SELECT * FROM artists WHERE ArtistId = ?", params[:id].to_i)
+#     slim(:artists, locals:{result:result.first})
+# end
 
 post('/artists') do
     id = params[:number]
     redirect("/artists/#{id}")
 end
 
-get('/dintopfem') do
+get('/your_favorite_artist') do
     result = params.keys
     artistnamn = []
     # p result 
@@ -170,9 +172,8 @@ get('/dintopfem') do
     end
     p params
     p artistnamn
-    slim(:dintopfem, locals:{result: artistnamn})
-    # artistnamn = params[:artistnamn]
-    # redirect("/dintopfem")
+    slim(:your_favorite_artist, locals:{result: artistnamn})
+    
 
 end 
 
@@ -186,7 +187,7 @@ get('/delete') do
     end
     p params
     p artistnamn
-    slim(:dintopfem, locals:{result: artistnamn})
+    slim(:your_favorite_artist, locals:{result: artistnamn})
 
 end
 
