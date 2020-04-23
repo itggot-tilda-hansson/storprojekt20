@@ -4,8 +4,9 @@ h1 Här är dina favorit artister
 ul
     - result.each do |e|
         li = e.first['name'] 
-        form action="/delete" method="get"
-	        input type="submit" value="Ta bort" 
+
+form action="/delete" method="get"
+    input type="submit" value="Ta bort" 
 
             
 

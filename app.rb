@@ -10,7 +10,27 @@ enable :sessions
 
 include Model
 
-get("/") do 
+
+before do
+    path = request.path_info
+    list = ['/', '/register', '/error', '/register_confirmation', '/loggin', '/logout', '/artister', '/favorite_artist', '/all', '/all_win', '/artists/:id', '/artists', '/your_favorite_artist', '/delete']
+    redirect = true
+    
+    list.each do |e|
+        if path == e
+            redirect = false
+        end
+    end
+
+    if session[:id].nil? and redirect
+        redirect('/')
+    end
+end
+
+
+get("/") do
+    # session[:id] = nil
+    # session[:username] = nil
     slim(:start)
 end
 
@@ -145,5 +165,6 @@ get('/delete') do
         artistnamn << namn
     end
     slim(:your_favorite_artist, locals:{result: artistnamn})
+    
 
 end
