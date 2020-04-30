@@ -20,6 +20,34 @@ Här ligger det som är public för alla att se och data som man kan ta del av o
 Dessa mappar har med yardoc att göra. Skapar API automatiskt, en webbsida som visar applikationens routes och funktioner. 
 ### views 
 Här ligger alla slim filer.
-- 
+  album.slim
+    Resultatet från när du har sökt på en artist id, de id:t du har sökt på kommer     nu upp som ett namp på en artist.
+  all_win.slim 
+    Om du trycker på alla vinnare knappen så kommer alla vinnare upp på sidan,         detta genom en lopp och om winner kolumnen i databasen inte är null kommer         artisten upp som vinnare. 
+  all.slim
+    Alla artister som finns i databasen kommer upp.
+  artister.slim
+    Sidan med alla artister, du kan här antingen se alla, alla vinnare eller söka     på en artist. 
+  artists.slim
+    Om du söker på en artist 'artists/:id'
+  error.slim
+    Om något skulle gå fel, tex fel lösenord så kommer du till denna error sida       och en länk tillbaka till "/" sidan
+  favorite_artist.slim
+    Här väljer du dina favorit artister genom att trycka i checkbox på de artister     du vill välja
+  layout.slim
+    Layout sidan helt enkelt, finns på varje delsida men länkar till startsidan       och till sidan med alla artister.
+  register_confirmation.slim
+    Om du lyckas logga in kommer man till denna sidan så att man vet att man är       inloggad och kan därmed gå vidare till att välja sina favorit artister.
+  start.slim
+    Start sidan där du kan registrera dig eller logga in, om du inte vill logga in     är det här du kan gå till att se alla artister. 
+  your_favorite_artist.slim
+    Här ser du de artister du har valt som dina favorit artister, du kan också ta     bort eller välja nya om du skulle vilja det.
+
+### app.rb
+Ligger inte i någon mapp men är min controller där alla routes finns med både sessions och felhantering.
+### model.rb
+Ligger inte heller i någon mapp men denna fil innehåller SQL kod med både validering med passwordcheck och BCrypt.
+### Gemfile
+Har med yardoc att göra. 
   
 
