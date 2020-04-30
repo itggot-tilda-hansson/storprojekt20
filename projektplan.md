@@ -55,6 +55,7 @@ Om du trycker på alla vinnare knappen så kommer alla vinnare upp på sidan, de
   ### your_favorite_artist.slim 
   Här ser du de artister du har valt som dina favorit artister, du kan också ta bort eller välja nya om du skulle vilja det.
 
+
 ### app.rb
 Ligger inte i någon mapp men är min controller där alla routes finns med både sessions och felhantering.
 ### model.rb
