@@ -38,6 +38,7 @@ post("/register") do
     username = params["username"]
     password = params["password"]
     password_confirmation = params["confirm_password"]
+
     
     result = id_from_username(username)
     
@@ -84,21 +85,28 @@ post('/loggin') do
     if result.empty? #ser om användaren finns
         # "användaren finns inte"
         redirect('/error')
-    else
-        password_digest = result.first['password_digest']
-        if BCrypt::Password.new(password_digest) == password #jämför med lösenordet i databasen
-            #här loggar du faktiskt in
-            session[:id] = result.first['id']
-            session[:username] = username
-                
-            redirect('/register_confirmation')    
-        else
-            redirect('/error')
-                
-        end
     end
 
-    # redirect('/register_confirmation')
+        if session[:attempt].nil?
+            session[:attempt] = Time.now
+    elsif Time.now - session[:attempt] < 20 
+        session[:error] = "Du har slagit in fel lösenord, försök igen om en stund"
+        redirect('/error')
+    end
+    
+    
+    session[:attempt] = Time.now
+
+    password_digest = result.first['password_digest']
+    if BCrypt::Password.new(password_digest) == password #jämför med lösenordet i databasen
+            #här loggar du faktiskt in
+        session[:id] = result.first['id']
+        session[:username] = username
+                
+        redirect('/register_confirmation') 
+
+    end
+            
 
 
 end 
@@ -130,7 +138,8 @@ get('/all_win') do
 end
 
 get('/artists/:id') do 
-    result = all_from_artistid
+    id = params[:id].to_i
+    result = all_from_artistid(id)
 
     if result.empty?
         redirect('/error')
@@ -146,6 +155,8 @@ end
 
 get('/your_favorite_artist') do
     result = params.keys
+    
+    
     artistnamn = []
 
     result.each do |e|
@@ -158,6 +169,7 @@ end
 
 get('/delete') do
     result = params.keys
+    
     artistnamn = []
 
     result.each do |e|

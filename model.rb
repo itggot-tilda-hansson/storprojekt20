@@ -52,19 +52,44 @@ module Model
         return result
     end
 
-    def all_from_artistid()
+    def all_from_artistid(id)
         db = db()
-        result = db.execute("SELECT * FROM artists WHERE artistid = ?", params[:id].to_i)
-        return result
+        result = db.execute("SELECT * FROM artists WHERE artistid = ?", id)
+        return result   
     end
+
+    
+    # def name_from_artists()
+    #     db = db()
+    #     result = params.keys
+    #     artistnamn = []
+
+    #     result.each do |e|
+    #         namn = db.execute("DELETE name FROM artists WHERE artistid = (?)", e.to_i)
+    #         artistnamn << namn
+    #     end
+
+    #     return artistnamn 
+    # end
+
+    # def name_from_artists_id()
+    #     db = db()
+    #     result = params.keys
+    #     artistnamn = []
+
+    #     result.each do |e|
+    #         namn = db.execute("SELECT name FROM artists WHERE artistid = (?)", e.to_i)
+    #         # name = name_from_artists
+    #         artistnamn << namn
+    #     end
+    #     return artistnamn
+
+    # end
+
 
 end
 
-# def name_from_artists()
-#     db = db()
-#     namn = db.execute("SELECT name FROM artists WHERE artistid = (?)", e.to_i)
-#     return name
-# end
+
 
 
 
